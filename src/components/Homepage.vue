@@ -44,6 +44,10 @@
           <StyledButton class="w-1/3" @click.prevent="shareUrl">
             Share
           </StyledButton>
+          <div class="flex items-center justify-center mt-4">
+              <input id="onbuscated" type="checkbox" v-model="obfuscated" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
+              <label for="onbuscated" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none">Obfuscate URL before sharing</label>
+          </div>
         </div>
       </form>
       <footer class="text-center text-gray-500 mt-2">
@@ -62,6 +66,7 @@ import { styles } from '../util/styles'
 
 const message = ref(params.message ?? '')
 const style = ref(styles[params.style] ? params.style : 'basic')
+const obfuscated = ref(false)
 
 function previewMessage () {
   params.message = message.value
@@ -71,7 +76,7 @@ function previewMessage () {
 async function shareUrl (evt) {
   const url = new URL(location.href)
   url.hash =
-    evt.ctrlKey
+    obfuscated.value
       ? await getObfuscatedUrl({
         message: message.value,
         style: style.value

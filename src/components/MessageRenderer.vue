@@ -92,7 +92,7 @@ function renderHeart () {
 function startHypnoAnimation () {
   if (!hypnoCanvas.value) {
     watch(hypnoCanvas, startHypnoAnimation, {
-      once: true   
+      once: true
     })
     return
   }
@@ -106,8 +106,9 @@ function startHypnoAnimation () {
   const numBranches = 10
   const centerX = width / 2
   const centerY = height / 2
-  const angleStep = -Math.PI / 150
+  const angleSpeed = -Math.PI / 3
   let baseAngle = 0
+  let lastTimestamp = 0
 
   function getSpiralPoint (angle, steps) {
     const distance = Math.exp(steps / 10) / 20
@@ -117,44 +118,65 @@ function startHypnoAnimation () {
     }
   }
 
-  function loop () {
+  function loop (timestamp) {
     if (params.style !== 'hypno') return
+
+    // Calculate time delta for smooth animation
+    const deltaTime = (timestamp - lastTimestamp) / 1000 // convert ms to seconds
+    lastTimestamp = timestamp
+
+    // Adjust baseAngle using delta time for smoother animation
+    baseAngle += angleSpeed * deltaTime
 
     ctx.fillStyle = 'black'
     ctx.fillRect(0, 0, width, height)
-        
+    
     for (let branch = 0; branch < numBranches; branch++) {
       const startAngle = (branch * Math.PI * 2) / numBranches + baseAngle
       
       ctx.beginPath()
-      ctx.moveTo(centerX, centerY)
-      
-      // Draw outer edge of branch
       let steps = 0
+
+      // Draw outer edge of branch
+      let prevPoint = getSpiralPoint(startAngle, steps)
+      ctx.moveTo(prevPoint.x, prevPoint.y)
+      
       while (true) {
-        const point = getSpiralPoint(startAngle, steps)
-        ctx.lineTo(point.x, point.y)
         steps++
+        const point = getSpiralPoint(startAngle, steps)
+
+        const midPoint = {
+          x: (prevPoint.x + point.x) / 2,
+          y: (prevPoint.y + point.y) / 2
+        }
+        ctx.quadraticCurveTo(prevPoint.x, prevPoint.y, midPoint.x, midPoint.y)
+
+        prevPoint = point
         if (point.x < -height) break
         if (steps > 1000) break
       }
-      
+
       // Draw inner edge of branch (coming back to center)
       while (steps--) {
         const point = getSpiralPoint(startAngle + Math.PI / numBranches, steps)
-        ctx.lineTo(point.x, point.y)
+        const midPoint = {
+          x: (prevPoint.x + point.x) / 2,
+          y: (prevPoint.y + point.y) / 2
+        }
+        ctx.quadraticCurveTo(prevPoint.x, prevPoint.y, midPoint.x, midPoint.y)
+        prevPoint = point
       }
-      
+
       ctx.closePath()
       ctx.fillStyle = 'white'
       ctx.fill()
     }
 
-    baseAngle += angleStep
+    // Request the next frame
     requestAnimationFrame(loop)
   }
 
-  loop()
+  requestAnimationFrame(loop)
 }
 
 function resetToHomepage () {
