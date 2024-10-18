@@ -46,6 +46,9 @@
           </StyledButton>
         </div>
       </form>
+      <footer class="text-center text-gray-500 mt-2">
+        Inspired by <StyledLink href="https://bigassmessage.com">BIG-ASS MESSAGE</StyledLink> and hosted at <StyledLink href="https://github.com/qgustavor/bam/">GitHub</StyledLink>.
+      </footer>
     </div>
   </div>
 </template>
@@ -54,6 +57,7 @@
 import { ref } from 'vue'
 import { params } from '../util/urlParameters'
 import StyledButton from './StyledButton.vue'
+import StyledLink from './StyledLink.vue'
 import { styles } from '../util/styles'
 
 const message = ref(params.message ?? '')
