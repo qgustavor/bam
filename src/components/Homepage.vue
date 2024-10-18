@@ -55,7 +55,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { params } from '../util/urlParameters'
+import { params, getObfuscatedUrl } from '../util/urlParameters'
 import StyledButton from './StyledButton.vue'
 import StyledLink from './StyledLink.vue'
 import { styles } from '../util/styles'
@@ -68,12 +68,18 @@ function previewMessage () {
   params.style = style.value
 }
 
-function shareUrl () {
+async function shareUrl (evt) {
   const url = new URL(location.href)
-  url.hash = new URLSearchParams({
-    message: message.value,
-    style: style.value
-  })
+  url.hash =
+    evt.ctrlKey
+      ? await getObfuscatedUrl({
+        message: message.value,
+        style: style.value
+      })
+      : new URLSearchParams({
+        message: message.value,
+        style: style.value
+      })
   navigator.share({
     title: 'A BIG MESSAGE',
     text: 'Here is a big message for you!',
