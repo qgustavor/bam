@@ -14,7 +14,7 @@
       </TextFit>
     </div>
     <div v-else-if="params.style === 'jprdy'" class="h-screen flex items-center justify-center text-center bg-blue-700 text-gray-100">
-      <TextFit :style="{textShadow: '0.5em 0.5em 1em black'}">
+      <TextFit :style="{textShadow: '0.5rem 0.5rem 1rem black'}">
         {{ params.message || defaultMessages.jprdy }}
       </TextFit>
     </div>
