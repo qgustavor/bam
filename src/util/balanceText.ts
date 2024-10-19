@@ -137,9 +137,9 @@ function calculateLineLengthPenalty (splits: string[], combination: Combination)
   return (maxLineLength - minLineLength) * 0.01
 }
 
-function searchChild (element: HTMLElement, regex: RegExp): HTMLElement | undefined {
+function searchChild (element: HTMLElement | ChildNode, regex: RegExp): Text | undefined {
   for (const child of element.childNodes) {
-    if (child.nodeType === Node.TEXT_NODE) {
+    if (child instanceof Text) {
       if (regex.test(child.data)) {
         return child
       }
