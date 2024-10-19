@@ -7,7 +7,6 @@ export default function balanceTextBreaks(
   if (!splits.length) return
 
   const numBreaks: number = splits.length - 1
-  if (numBreaks === 1) return
   
   const measureElement = document.createElement('span')
   element.appendChild(measureElement)
@@ -46,13 +45,18 @@ export default function balanceTextBreaks(
   }
 
   // Apply best combination
-  if (!bestCombination) return
   element.removeChild(measureElement)
+  if (!bestCombination) return
+
+  const xScale = targetWidth / bestWidth
+  const yScale = targetHeight / bestHeight
+  const scale = Math.min(xScale, yScale)
+  element.style.fontSize = scale.toFixed(2) + 'em'
   
   for (let i = 0; i < bestCombination.length; i++) {
     if (!bestCombination[i]) continue
     const needle = splits[i]
-    const regex = new RegExp(`\\b${needle}\\b`)
+    const regex = new RegExp(`(?:^|\\b)${needle}(?:\\b|$)`)
     const child = searchChild(element, regex)
     const parts = child.data.split(regex)
     child.replaceWith(
@@ -61,11 +65,6 @@ export default function balanceTextBreaks(
       parts[1] ?? ''
     )
   }
-  
-  const xScale = targetWidth / bestWidth
-  const yScale = targetHeight / bestHeight
-  const scale = Math.min(xScale, yScale)
-  element.style.fontSize = scale.toFixed(2) + 'em'
 }
 
 function getPossibilitiesBruteForce (splits: string[]): Combination[] {
