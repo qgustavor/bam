@@ -17,8 +17,8 @@ export default function balanceTextBreaks(
     ? getPossibilitiesBruteForce(splits)
     : getPossibilitiesSimplified(splits)
   
-  const targetWidth: number = document.documentElement.clientWidth
-  const targetHeight: number = document.documentElement.clientHeight
+  const targetWidth: number = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+  const targetHeight: number = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
   const targetAngle: number = Math.atan(targetWidth / targetHeight)
   let bestScore: number = Infinity
   let bestCombination: Combination | undefined
