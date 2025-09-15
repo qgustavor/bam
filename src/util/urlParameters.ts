@@ -11,7 +11,11 @@ async function handleObfuscatedMessage () {
 
   // Try decompressing using deflate-raw
   try {
-    obfuscatedMessage = await new Response(new Response(obfuscatedMessage).body.pipeThrough(new window.DecompressionStream('deflate-raw'))).text()
+    obfuscatedMessage = await new Response(
+      new Response(obfuscatedMessage as unknown as BodyInit)
+        .body
+        .pipeThrough(new window.DecompressionStream('deflate-raw'))
+    ).text()
   } catch {}
 
   if (typeof obfuscatedMessage !== 'string') {
