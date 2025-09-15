@@ -32,6 +32,14 @@
         {{ params.message || defaultMessages.hypno }}
       </TextFit>
     </div>
+    <div v-else-if="params.style === 'banner'" class="h-screen flex items-center justify-center text-center">
+      <div class="banner-wrapper">
+        <div class="banner-inner">
+          <div class="banner-text">{{ params.message || defaultMessages.banner }}</div>
+          <div class="banner-text">{{ params.message || defaultMessages.banner }}</div>
+        </div>
+      </div>
+    </div>
     <div v-else class="h-screen flex items-center justify-center text-center">
       <TextFit>
         {{ params.message || defaultMessages.basic }}
@@ -41,7 +49,7 @@
 </template>
 
 <script setup>
-import { watch, ref, h } from 'vue'
+import { watch, ref, computed, h } from 'vue'
 import { params } from '../util/urlParameters'
 import { defaultMessages } from '../util/styles'
 
@@ -63,6 +71,8 @@ function randomizeValues (style) {
   } else if (style === 'hypno') {
     startHypnoAnimation()
   }
+  
+  document.documentElement.style.overflow = style ? 'hidden' : ''
 }
 
 function magicAnimation () {
@@ -183,6 +193,10 @@ function resetToHomepage () {
   params.message = null
   params.style = null
 }
+
+const bannerTime = computed(() => {
+  return Math.round((params.message || defaultMessages.banner).length / 5) + 's'
+})
 </script>
 
 <style>
@@ -193,5 +207,29 @@ function resetToHomepage () {
 }
 @keyframes beat {
 	to { transform: scale(1.2); }
+}
+.banner-wrapper {
+  /* I guess I got annoyed at Tailwind */
+  font-size: 90vh;
+  text-align: left;
+  white-space: nowrap;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+.banner-inner {
+  animation: banner v-bind(bannerTime) linear infinite;
+}
+@keyframes banner {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.banner-text {
+  display: inline-block;
+  padding-right: 1ch;
 }
 </style>

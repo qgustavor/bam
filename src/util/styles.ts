@@ -3,7 +3,8 @@ export const styles = {
   magic: 'Magic',
   jprdy: 'JPRDY',
   heart: 'Heart',
-  hypno: 'Hypno'
+  hypno: 'Hypno',
+  banner: 'Bnner'
 }
 
 export const defaultMessages = {
@@ -11,5 +12,6 @@ export const defaultMessages = {
   magic: 'BAM!',
   jprdy: 'What is BAM?',
   heart: 'I heart BAM!',
-  hypno: 'BAM!'
+  hypno: 'BAM!',
+  banner: 'BAM! BAM! BAM! BAM! BAM! BAM! BAM!'
 }
